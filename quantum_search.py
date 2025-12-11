@@ -1,5 +1,4 @@
 # Exploration : Algorithme de Grover (Recherche de Mutation)
-# Auteur : Sacha Miloch-Cohen
 # Framework : Qiskit
 
 from qiskit import QuantumCircuit, Aer, execute
@@ -30,7 +29,6 @@ def simulation_grover():
 
     # 4. AMPLIFICATION (Le rendre visible)
     # C'est l'étape mathématique (Inversion autour de la moyenne).
-    # Sans rentrer dans les maths complexes : cette étape utilise l'état négatif (-) 
     # créé juste avant pour booster sa probabilité à 100%.
     # Elle transfère la probabilité des mauvaises réponses vers la bonne.
     qc.h([0, 1])
