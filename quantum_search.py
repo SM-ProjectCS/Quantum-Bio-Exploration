@@ -1,55 +1,62 @@
+# Exploration : Algorithme de Grover (Recherche de Mutation)
+# Auteur : Sacha Miloch-Cohen
+# Framework : Qiskit
+
 from qiskit import QuantumCircuit, Aer, execute
 from qiskit.visualization import plot_histogram
 
 def simulation_grover():
     """
-    Simulation d'une recherche quantique.
-    But : Trouver l'état '11' parmi 4 possibilités en une seule requête.
+    Simulation : Trouver la combinaison '11' (la mutation) parmi 4 possibilités.
     """
 
-    # 1. INITIALISATION
-    # On prépare 2 Qubits. 
-    # Avec 2 qubits, on a 4 états possibles (00, 01, 10, 11).
+    # 1. INITIALISATION (Les 4 cartes)
+    # On utilise 2 Qubits. 
+    # Cela nous donne 4 états possibles : 00, 01, 10, 11.
     n_qubits = 2
     qc = QuantumCircuit(n_qubits, n_qubits)
 
-    # 2. SUPERPOSITION (Porte Hadamard)
-    # C'est l'étape clé. On passe d'un état défini (0 ou 1) à une superposition.
-    # Concrètement : l'ordinateur traite maintenant les 4 états en même temps.
+    # 2. SUPERPOSITION (Tout regarder en même temps)
+    # La porte 'H' (Hadamard) met les qubits dans tous les états à la fois.
+    # L'ordinateur a maintenant les 4 cartes "en main" simultanément.
     qc.h([0, 1])
 
-    # 3. ORACLE (Le "Tag")
-    # C'est la fonction qui identifie ce qu'on cherche.
-    # Ici, on cherche l'état '11'. L'oracle ne nous donne pas la réponse,
-    # mais il inverse le signe de la bonne réponse (inversion de phase) pour la marquer.
+    # 3. L'ORACLE (Marquer le suspect)
+    # On cherche l'état '11'.
+    # La porte 'CZ' agit comme un filtre. Elle reconnait '11' et inverse son signe.
+    # Concrètement : Les autres états restent positifs (+), l'état '11' devient négatif (-).
+    # C'est ce "tag" mathématique qui permet de le différencier.
     qc.cz(0, 1)
 
-    # 4. DIFFUSEUR (Amplification)
-    # À ce stade, la bonne réponse est marquée mais a la même probabilité que les autres.
-    # Ce bloc mathématique va "booster" la probabilité de notre cible ('11')
-    # et écraser celle des mauvaises réponses.
+    # 4. AMPLIFICATION (Le rendre visible)
+    # C'est l'étape mathématique (Inversion autour de la moyenne).
+    # Sans rentrer dans les maths complexes : cette étape utilise l'état négatif (-) 
+    # créé juste avant pour booster sa probabilité à 100%.
+    # Elle transfère la probabilité des mauvaises réponses vers la bonne.
     qc.h([0, 1])
     qc.z([0, 1])
     qc.cz(0, 1)
     qc.h([0, 1])
 
-    # 5. MESURE
-    # On force les qubits à choisir un état final (0 ou 1).
-    # Grâce à l'amplification, on tombera sur '11' dans 100% des cas théoriques.
+    # 5. MESURE (Le verdict)
+    # On force le système à choisir une réponse finale.
+    # Grâce à l'étape 4, il est obligé de choisir '11'.
     qc.measure([0, 1], [0, 1])
 
-    # --- EXÉCUTION ---
-    print("Lancement de la simulation (Backend Aer)...")
-
-    # Utilisation du simulateur parfait (pas de bruit quantique)
+    # --- LANCEMENT ---
+    print(">>> Démarrage du simulateur...")
+    
+    # On utilise un simulateur classique parfait (Aer).
+    # Comme expliqué dans le README, c'est possible car on a peu de qubits.
+    # Avec 50 qubits, mon PC exploserait (manque de RAM).
     simulator = Aer.get_backend('qasm_simulator')
     
+    # On lance l'expérience 1024 fois pour avoir une preuve statistique.
     job = execute(qc, simulator, shots=1024)
     result = job.result()
     counts = result.get_counts(qc)
 
-    # On vérifie qu'on a bien trouvé '11'
-    print(f"Résultat de la détection : {counts}")
+    print(f">>> Résultat (Combien de fois on a trouvé '11') : {counts}")
 
 if __name__ == "__main__":
     simulation_grover()
