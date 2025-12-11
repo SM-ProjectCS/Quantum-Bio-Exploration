@@ -12,8 +12,6 @@ Le calcul quantique permet de résoudre ce qui est physiquement impossible pour 
 
 ## 🇫🇷 Contexte : L'Excellence Scientifique Française
 
-Ce projet s'inscrit dans une dynamique d'innovation portée par des figures majeures de la physique mondiale :
-
 * **Alain Aspect (Nobel 2022) :** A prouvé la réalité de l'intrication quantique (violation des inégalités de Bell), confirmant que deux particules peuvent rester liées quelle que soit la distance.
 * **Michel H. Devoret (Nobel 2025) :** A démontré l'existence du **tunnel quantique à l'échelle macroscopique**. Ses travaux ont prouvé qu'un circuit électrique entier (et pas juste un atome) pouvait se comporter comme un système quantique, posant les bases physiques des ordinateurs quantiques actuels (Qubits supraconducteurs).
 
